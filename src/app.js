@@ -4,8 +4,9 @@ const morgan = require('morgan')
 const cors = require('cors')
 const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
-
-const app = express()
+const  logger  = require('./logger')
+const bookRouter = require('./Books/books-route')
+const app = express();
 
 const morganOption = (NODE_ENV === 'production')
   ? 'tiny'
@@ -14,8 +15,27 @@ const morganOption = (NODE_ENV === 'production')
 app.use(morgan(morganOption))
 app.use(helmet())
 app.use(cors())
+app.use(express.json());
 
-app.get('/', (req, res) => {
+
+
+app.use(function validateToken(req, res, next){
+  const apiToken = process.env.API_TOKEN;
+  console.log(apiToken)
+  const authToken = req.get('Authorization')
+
+  if (!authToken || authToken.split(' ')[1] !== apiToken) {
+    logger.error(`Unauthorized request to path: ${req.path}`);
+    return res.status(401).json({ error: 'Unauthorized request' })
+  }
+  // move to the next middleware
+  next();
+});
+
+app.use(bookRouter);
+
+
+app.get('/books', (req, res) => {
     res.send('Hello, world!')
     })
 
