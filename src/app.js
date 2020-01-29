@@ -6,6 +6,7 @@ const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
 const  logger  = require('./logger')
 const bookRouter = require('./Books/books-route')
+const BookmarkService = require('./bookmark-service')
 const app = express();
 
 const morganOption = (NODE_ENV === 'production')
@@ -35,8 +36,28 @@ app.use(function validateToken(req, res, next){
 app.use(bookRouter);
 
 
-app.get('/books', (req, res) => {
-    res.send('Hello, world!')
+app.get('/books', (req, res, next) => {
+  const knexInstance = req.app.get('db')
+
+    BookmarkService.getList(knexInstance)
+    .then(items => {
+      res.json(items)
+    })
+    .catch(next)
+    })
+
+    app.get('/books/:book_id', (req, res, next) => {
+      const knexInstance = req.app.get('db')
+
+      BookmarkService.getById(
+       knexInstance,
+        req.params.book_id
+      )
+        .then(bookmark => {
+         res.json(bookmark)
+        })
+
+        .catch(next)
     })
 
     app.use(function errorHandler(error, req, res, next) {

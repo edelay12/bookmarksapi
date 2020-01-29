@@ -58,7 +58,7 @@ res
 
   bookRouter.route('/bookmarks/:id')
     .get((req,res) => {
-
+console.log(req.params)
       let  id1 = req.params;
       console.log(id1)
       const result = BOOKS.find(b => b.id == id1);
@@ -92,7 +92,7 @@ if(!bookIndex || bookIndex == undefined){
 
       //const end = BOOKS.length;
      // if(start < end) {
-        logger.info(`Bookmark with ${id1}`);
+        logger.info(`Bookmark with ${id1} was deleted`);
         res.status(204).end();
 
     //  }
