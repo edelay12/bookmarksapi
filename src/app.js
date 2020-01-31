@@ -22,7 +22,7 @@ app.use(function validateToken(req, res, next) {
   const apiToken = process.env.API_TOKEN;
   console.log(apiToken);
   const authToken = req.get("Authorization");
-
+console.log(authToken)
   if (!authToken || authToken.split(" ")[1] !== apiToken) {
     logger.error(`Unauthorized request to path: ${req.path}`);
     return res.status(401).json({ error: "Unauthorized request" });
@@ -79,7 +79,7 @@ app.post("/books", jsonParser, (req, res, next) => {
     .then(bookmark => {
       res
         .status(201)
-        .location(`/bookmarks/${bookmark.id}`)
+        .location(`/books/${bookmark.id}`)
         .json(serializeItem(newItem));
     })
     .catch(next);
@@ -92,8 +92,33 @@ const serializeItem = article => ({
   description: xss(article.description),
   rating: article.rating
 });
+//update -----------
 
 
+   app.patch( '/books/:book_id' ,jsonParser, (req, res, next) => {
+     const { name, link, description, rating } = req.body
+     const newItem = { name, link, description, rating }
+  
+     const numberOfValues = Object.values(newItem).filter(Boolean).length
+        if (numberOfValues === 0) {
+          return res.status(400).json({
+            error: {
+              message: `Request body must contain either 'name', 'link' or 'rating'`
+            }
+          })
+        }
+     
+    BookmarkService.updateItem(
+       req.app.get('db'),
+       req.params.book_id,
+       newItem
+     )
+     .then(numRowsAffected => {
+       res.location('/books')
+       .status(204).end()
+    })
+       .catch(next)
+    })
 
 
 app.use(function errorHandler(error, req, res, next) {

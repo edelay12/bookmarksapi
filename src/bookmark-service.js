@@ -18,6 +18,13 @@ return knex.select('*').from('bookmark_table')
         return knex('bookmark_table')
         .where('item_key' , id)
         .delete()
+    },
+    updateItem(knex, id, newItem) {
+       
+            return knex('bookmark_table')
+              .where('item_key' , id)
+              .update(newItem)
+          
     }
 };
 

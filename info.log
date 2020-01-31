@@ -56,3 +56,10 @@
 {"message":"Bookmark with id [object Object] not found.","level":"error"}
 {"message":"Unauthorized request to path: /","level":"error"}
 {"message":"Unauthorized request to path: /","level":"error"}
+{"message":"Unauthorized request to path: /books/3","level":"error"}
+{"message":"Unauthorized request to path: /books/3","level":"error"}
+{"message":"Unauthorized request to path: /books/1","level":"error"}
+{"message":"Unauthorized request to path: /books/1","level":"error"}
+{"message":"Unauthorized request to path: /books/1","level":"error"}
+{"message":"Unauthorized request to path: /books/1","level":"error"}
+{"message":"Unauthorized request to path: /books/1","level":"error"}
